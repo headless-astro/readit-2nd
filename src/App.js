@@ -2,7 +2,7 @@ import "./App.css";
 import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import NavnarMain from "./Components/Navbar/NavnarMain";
+import NavbarMain from "./Components/Navbar/NavbarMain";
 import Footer from "./Components/Footer/Footer";
 import CreateModal from "./Components/Modals/CreateModal";
 import { fetchUser } from "./store/slices/userSlice";
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div>
-      <NavnarMain />
+      <NavbarMain />
       <Pages />
       <Footer />
       <CreateModal />

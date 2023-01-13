@@ -3,25 +3,12 @@ import errors from "./errors";
 import TokenService from "./TokenService";
 
 const logout = async () => {
-  try {
-    //logout not implemented
-    const res = await api.get(`/auth/logout`);
-    TokenService.removeLocalAccessToken();
-    TokenService.removeLocalRefreshToken();
-
-    return res;
-  } catch (error) {
-    TokenService.removeLocalAccessToken();
-    TokenService.removeLocalRefreshToken();
-
-    return errors.errorHandler(error);
-  }
+  TokenService.removeLocalAccessToken();
 };
 
 const handleAuthResponse = (res, save) => {
-  if (res.data.refresh_token && res.data.access_token) {
-    TokenService.setLocalAccessToken(res.data.access_token, save);
-    TokenService.setLocalRefreshToken(res.data.refresh_token, save);
+  if (res.data.token) {
+    TokenService.setLocalAccessToken(res.data.token, save);
 
     return { error: false };
   }

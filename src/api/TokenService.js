@@ -5,13 +5,6 @@ const getLocalAccessToken = () => {
   );
 };
 
-const getLocalRefreshToken = () => {
-  return (
-    window.localStorage.getItem("refreshToken") ||
-    window.sessionStorage.getItem("refreshToken")
-  );
-};
-
 const setLocalAccessToken = (accessToken, save) => {
   if (save) {
     window.localStorage.setItem("accessToken", accessToken);
@@ -20,22 +13,9 @@ const setLocalAccessToken = (accessToken, save) => {
   }
 };
 
-const setLocalRefreshToken = (refreshToken, save) => {
-  if (save) {
-    window.localStorage.setItem("refreshToken", refreshToken);
-  } else {
-    window.sessionStorage.setItem("refreshToken", refreshToken);
-  }
-};
-
 const removeLocalAccessToken = () => {
   window.localStorage.removeItem("accessToken");
   window.sessionStorage.removeItem("accessToken");
-};
-
-const removeLocalRefreshToken = () => {
-  window.localStorage.removeItem("refreshToken");
-  window.sessionStorage.removeItem("refreshToken");
 };
 
 const isSaved = () => {
@@ -44,10 +24,10 @@ const isSaved = () => {
 
 export default {
   getLocalAccessToken,
-  getLocalRefreshToken,
+
   setLocalAccessToken,
-  setLocalRefreshToken,
+
   removeLocalAccessToken,
-  removeLocalRefreshToken,
+
   isSaved,
 };

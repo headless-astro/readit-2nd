@@ -1,19 +1,25 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import CreateModal from "../Modals/CreateModal";
 import { fetchUser } from "../../store/slices/userSlice";
 import { useSelector, useDispatch } from "react-redux";
+import AuthAPI from "../../api/AuthAPI";
 
 function NavnarMain() {
-  const fetchUserValue = useSelector((state) => state.user !== null);
+  var fetchUserValue = useSelector((state) => state.user !== null);
   const dispatch = useDispatch();
-  const [modal, setmodal] = useState(false);
+  const [modal, setModal] = useState(false);
+  console.log(fetchUserValue);
 
   const isLoginFunction = () => {
     {
-      fetchUserValue
-        ? dispatch(fetchUser(false)) && localStorage.removeItem("fetchUser")
-        : setmodal(!modal);
+      if (fetchUserValue) {
+        dispatch(fetchUser(false));
+        localStorage.removeItem("fetchUser");
+        AuthAPI.logout();
+      } else {
+        setModal(!modal);
+      }
     }
   };
 
