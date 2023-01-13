@@ -4,6 +4,7 @@ import TokenService from "./TokenService";
 
 const logout = async () => {
   try {
+    //logout not implemented
     const res = await api.get(`/auth/logout`);
     TokenService.removeLocalAccessToken();
     TokenService.removeLocalRefreshToken();
@@ -27,9 +28,9 @@ const handleAuthResponse = (res, save) => {
   return { error: res.error };
 };
 
-const login = async (userName, password, save) => {
+const login = async (username, password, save) => {
   try {
-    const res = await api.post(`/auth/login`, { userName, password });
+    const res = await api.post(`users/login-user`, { username, password });
     console.log(res.data);
 
     return handleAuthResponse(res, save);
@@ -38,12 +39,12 @@ const login = async (userName, password, save) => {
   }
 };
 
-const register = async (username, password, email) => {
+const register = async (username, email, password) => {
   try {
-    const res = await api.post(`/auth/register`, {
+    const res = await api.post(`users/register-user`, {
       username,
-      password,
       email,
+      password,
     });
     console.log(res.data);
 
