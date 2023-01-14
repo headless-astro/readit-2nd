@@ -10,6 +10,16 @@ const getAllMovies = async () => {
   }
 };
 
+const movieInfo = async (title) => {
+  try {
+    const res = await api.get("/movies/current-movie", { title });
+    return res;
+  } catch (error) {
+    return errors.errorHandler(error);
+  }
+};
+
 export default {
   getAllMovies,
+  movieInfo,
 };
