@@ -13,6 +13,7 @@ function Lists() {
   const userid = useSelector((state) => state.user.user.uid);
   const lists = useSelector((state) => state.lists.lists);
   const listNames = [];
+  console.log(lists);
 
   useEffect(() => {
     dispatch(fetchLists())
@@ -23,15 +24,6 @@ function Lists() {
       });
   }, []);
 
-  // Some styling for the items
-  const styles = {
-    backgroundColor: "white",
-    width: "50px",
-    marginBottom: "10px",
-    padding: "10px",
-    color: "green",
-    boxShadow: "rgb(0,0,0,0.44) 0px 5px 5px",
-  };
   return (
     <div className="w-full h-full flex justify-center items-center flex-col bg-[#1f252c]  ">
       <div className=" w-full flex  h-[102px] sm:h-[92px] bg-[#14181c]"></div>
@@ -69,7 +61,7 @@ function Lists() {
                     <img
                       className=" absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem] border-2 border-[#1b2228] hover:border-[#613573] rounded-3xl object-cover"
                       src={
-                        list.movies[0]
+                        list.movies[0].posterUrl
                           ? list.movies[0].posterUrl
                           : "../images/heart.png"
                       }

@@ -9,10 +9,10 @@ const initialState = {
 export const fetchMovies = createAsyncThunk("movie/fetchMovies", async () => {
   try {
     const response = await MovieApi.getAllMovies();
-    console.log(response);
+    console.log(response.data);
     let value = false;
     if (!errors.isError(response)) {
-      value = response.data.data;
+      value = response.data;
       console.log("Movies", response.data);
     }
 

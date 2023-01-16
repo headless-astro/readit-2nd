@@ -102,9 +102,7 @@ function ListInfo() {
                     Directed by {fetchUserValue.username}
                   </p>
                 </div>
-                <p className="w-4/5  file: mt-6 text-lg text-[#8ba6a0]">
-                  {current.movies}
-                </p>
+                <p className="w-4/5  file: mt-6 text-lg text-[#8ba6a0]"></p>
               </div>
               <div>
                 {Array.isArray(current.movies) &&
@@ -112,34 +110,36 @@ function ListInfo() {
                   <div className="w-4/5 h-full mt-16  mb-16  grid grid-cols-2 sm:grid-cols-5 justify-center items-center ">
                     {current.movies.map((movie) => (
                       <div
-                        key={movie}
+                        key={movie.title}
                         className="h-[16rem] xl:h-[18rem]  rounded-3xl mx-7 my-2 flex  flex-row justify-center group  "
                       >
                         <Link
                           className="absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem]  hover:text-[#613573]"
-                          to={`/movie/${movie}`}
+                          to={`/movie/${movie.title}`}
                         >
                           <div className="">
                             <img
                               className=" absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem] border-2 border-[#1b2228] hover:border-[#613573] rounded-3xl object-cover"
                               src={
-                                current.movies[0]
-                                  ? current.movies[0].posterUrl
+                                movie.posterUrl
+                                  ? movie.posterUrl
                                   : "../images/heart.png"
                               }
                             />
-                            <div>{movie}</div>
+                            <div>{movie.title}</div>
                           </div>
                         </Link>
                         {fetchUserValue && (
                           <div className=" h-10 mb-2 z-10  rounded-lg bg-black opacity-70  sm:invisible  sm:group-hover:visible  ease-in-out duration-100  ">
-                            <button onClick={() => addToFavoriteMovies(movie)}>
+                            <button
+                              onClick={() => addToFavoriteMovies(movie.title)}
+                            >
                               <img
                                 className={` h-6 object-cover   rounded-2xl bg-[#B12403] hover:bg-[#B12403]}`}
                                 src={require("../../images/popcorn.png")}
                               />
                             </button>
-                            <button onClick={() => addToWatchlist(movie)}>
+                            <button onClick={() => addToWatchlist(movie.title)}>
                               <img
                                 className={" h-6 object-cover   rounded-2xl "}
                                 src={require("../../images/eye.png")}

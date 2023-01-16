@@ -1,9 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addFavoriteMovie } from "../../store/slices/favoriteMovieSlice";
-import { addWatchMovie } from "../../store/slices/forWatchList";
-import { deleteWatchMovie } from "../../store/slices/forWatchList";
-import { deleteFavoriteMovies } from "../../store/slices/favoriteMovieSlice";
+import { fetchFavorites } from "../../store/slices/favoritesSlice";
+import { fetchWatchlist } from "../../store/slices/watchlistSlice";
 import favoritesAPI from "../../api/favoritesAPI";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -11,21 +9,27 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 function Profile() {
   const data = useSelector((state) => state.mert.data);
   const fetchUserValue = useSelector((state) => state.user.user);
-  const favorite = useSelector((state) => state.favorite.favoriteMovies);
-  const watch = useSelector((state) => state.forwatch.watchMovies);
+  const favorites = useSelector((state) => state.favorites.favorites);
+  const watchlist = useSelector((state) => state.watchlist.watchlist);
   const dispatch = useDispatch();
+  console.log(useSelector((state) => state.favorites.favorites));
+  useEffect(() => {
+    dispatch(fetchFavorites())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
 
-  const addToFavoriteMovies = (element) => {
-    favorite && favorite.find((x) => x.Id === element.Id)
-      ? dispatch(deleteFavoriteMovies(element))
-      : dispatch(addFavoriteMovie(element));
-  };
-
-  const addToForWatchMovies = (element) => {
-    watch && watch.find((x) => x.Id === element.Id)
-      ? dispatch(deleteWatchMovie(element))
-      : dispatch(addWatchMovie(element));
-  };
+  useEffect(() => {
+    dispatch(fetchWatchlist())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
 
   return (
     <div className="w-full h-full flex justify-center items-center flex-col bg-[#1f252c]  ">
@@ -38,7 +42,7 @@ function Profile() {
         <div className="flex mt-4 sm:mt-0">
           <div className="flex flex-col sm:ml-32 justify-center w-32 text-center border-r-2 border-[#232d38]">
             <p className=" mb-4 pt-2  font-bold text-2xl text-[#fffffe]">
-              {favorite.length}
+              {favorites.length}
             </p>
             <p className="  h-full font-bold  text-[#fffffe] text-s font-sans opacity-60 hover:text-[#613573] hover:opacity-80">
               FAVORİLER
@@ -46,7 +50,7 @@ function Profile() {
           </div>
           <div className="flex flex-col  justify-center w-32 text-center ">
             <p className="  mb-4 pt-2  font-bold text-2xl text-[#fffffe]">
-              {watch.length}
+              {watchlist.length}
             </p>
             <p className="  h-full font-bold  text-[#fffffe] text-s font-sans opacity-60 hover:text-[#613573] hover:opacity-80">
               İZLEME LİSTENDE
