@@ -1,9 +1,9 @@
 import api from "./api";
 import errors from "./errors";
 
-const getFavorites = async (userid) => {
+const getWatchlist = async (userid) => {
   try {
-    const res = await api.post(`favorite/get-favorites`, { userid });
+    const res = await api.post("watchlist/get-watchlist", { userid });
 
     return res.data.data;
   } catch (error) {
@@ -11,9 +11,9 @@ const getFavorites = async (userid) => {
   }
 };
 
-const addFavorite = async (title, userId) => {
+const addToWatchlist = async (title, userId) => {
   try {
-    const res = await api.post("favorite/add-favorite", {
+    const res = await api.post("watchlist/add-watchlist", {
       title,
       userId,
     });
@@ -24,9 +24,9 @@ const addFavorite = async (title, userId) => {
   }
 };
 
-const deleteFavorite = async (title, userId) => {
+const deleteFromWatchlist = async (title, userId) => {
   try {
-    const res = await api.post("favorite/delete-favorite", {
+    const res = await api.post("watchlist/delete-watchlist", {
       title,
       userId,
     });
@@ -38,7 +38,7 @@ const deleteFavorite = async (title, userId) => {
 };
 
 export default {
-  getFavorites,
-  addFavorite,
-  deleteFavorite,
+  getWatchlist,
+  addToWatchlist,
+  deleteFromWatchlist,
 };

@@ -2,23 +2,24 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import favoritesAPI from "../../api/favoritesAPI";
 import UserAPI from "../../api/UserAPI";
 import errors from "../../api/errors";
+import watchlistAPI from "../../api/watchlistAPI";
 
 const initialState = {
-  favorites: false,
+  watchlist: false,
 };
 
-export const fetchFavorites = createAsyncThunk(
-  "favorites/fetchFavorites",
+export const fetchWatchlist = createAsyncThunk(
+  "watchlist/fetchWatchlist",
   async () => {
     try {
       const userId = await UserAPI.userInfo();
 
-      const response = await favoritesAPI.getFavorites(userId.data.data.uid);
+      const response = await watchlistAPI.getWatchlist(userId.data.data.uid);
       console.log(response);
       let value = false;
       if (!errors.isError(response)) {
         value = response;
-        console.log("fetchFavorites", response);
+        console.log("fetchWatchlist", response);
       }
 
       return value;
@@ -32,16 +33,16 @@ export const fetchFavorites = createAsyncThunk(
   }
 );
 
-export const favorites = createSlice({
-  name: "favorites",
+export const watchlist = createSlice({
+  name: "watchlist",
   initialState,
   reducers: {},
   extraReducers: {
-    [fetchFavorites.fulfilled]: (state, action) => {
-      state.favorites = action.payload;
-      console.log(state.favorites);
+    [fetchWatchlist.fulfilled]: (state, action) => {
+      state.watchlist = action.payload;
+      console.log(state.watchlist);
     },
   },
 });
 
-export default favorites.reducer;
+export default watchlist.reducer;

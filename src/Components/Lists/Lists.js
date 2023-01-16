@@ -68,7 +68,11 @@ function Lists() {
                   <div className="">
                     <img
                       className=" absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem] border-2 border-[#1b2228] hover:border-[#613573] rounded-3xl object-cover"
-                      src={require(`../../images/${list.movies[0]}.jpg`)}
+                      src={
+                        list.movies[0]
+                          ? list.movies[0].posterUrl
+                          : "../images/heart.png"
+                      }
                     />
                     <div>{list.list_name}</div>
                   </div>

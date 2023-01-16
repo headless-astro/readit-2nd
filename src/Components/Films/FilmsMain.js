@@ -7,18 +7,29 @@ import { addWatchMovie } from "../../store/slices/forWatchList";
 import { deleteWatchMovie } from "../../store/slices/forWatchList";
 import { deleteFavoriteMovies } from "../../store/slices/favoriteMovieSlice";
 import MovieAPI from "../../api/MovieAPI";
+import { fetchMovies } from "../../store/slices/movieSlice";
 
 function FilmsMain() {
-  const data = MovieAPI.getAllMovies();
+  const movies = useSelector((state) => state.movies.movies.title);
   //const data = useSelector((state) => state.movie);
-  console.log({ data });
-  const isLoginValue = useSelector((state) => state.login);
+  const fetchUserValue = useSelector((state) => state.user.user);
   const [SelectsValue, setSelectsValue] = useState({ year: "", genre: "" });
   const favorite = useSelector((state) => state.favorite.favoriteMovies);
   const watch = useSelector((state) => state.forwatch.watchMovies);
-  const [NewData, setNewData] = useState(data);
-  const [filterData, setFilterData] = useState(data);
+  const [NewData, setNewData] = movies;
+  const [filterData, setFilterData] = movies;
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchMovies())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+
   useEffect(() => {
     filter();
   }, [SelectsValue]);
@@ -89,7 +100,7 @@ function FilmsMain() {
                     src={require(`../../images/${element.img}`)}
                   />
                 </Link>
-                {isLoginValue && (
+                {fetchUserValue && (
                   <div className="w-1/2 h-10 mb-2 z-10 flex justify-center rounded-lg bg-black opacity-70  gap-4 sm:invisible  sm:group-hover:visible  ease-in-out duration-100 ">
                     <button onClick={() => addToFavoriteMovies(element)}>
                       <img

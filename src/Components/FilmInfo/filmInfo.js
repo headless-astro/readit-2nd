@@ -26,46 +26,6 @@ function FilmInfo() {
       });
   }, []);
 
-  /*
-  const addToFavoriteMovies = (element) => {
-    favorite && favorite.find((x) => x.Id === element.Id)
-      ? dispatch(deleteFavoriteMovies(element))
-      : dispatch(addFavoriteMovie(element));
-  };
-
-  const addToForWatchMovies = (element) => {
-    watch && watch.find((x) => x.Id === element.Id)
-      ? dispatch(deleteWatchMovie(element))
-      : dispatch(addWatchMovie(element));
-  };
-
-  {fetchUserValue && (
-          <div className=" flex justify-center  w-1/2 sm:w-1/5 h-[30rem] pt-20">
-            <div className=" flex justify-center gap-6 p-6 w-4/5 h-[6rem] rounded-lg bg-[#445566]">
-              <button onClick={() => addToFavoriteMovies(selectedMovie)}>
-                <img
-                  className={` h-6 object-cover   rounded-2xl ${
-                    favorite && favorite.find((x) => x.Id === selectedMovie.Id)
-                      ? "bg-[#B12403]"
-                      : "hover:bg-[#B12403]"
-                  }  `}
-                  src={require("../../images/popcorn.png")}
-                />
-              </button>
-              <button onClick={() => addToForWatchMovies(selectedMovie)}>
-                <img
-                  className={` h-6 object-cover   rounded-2xl ${
-                    watch && watch.find((x) => x.Id === selectedMovie.Id)
-                      ? "bg-[#00b020]"
-                      : "hover:bg-[#00b020]"
-                  }  `}
-                  src={require("../../images/eye.png")}
-                />
-              </button>
-            </div>
-          </div>
-        )}
-*/
   return (
     <div className="w-full h-full flex flex-col justify-center items-center text-center bg-[#1f252c]  ">
       <div className=" w-full h-[102px] sm:h-[92px] bg-[#14181c]"></div>
@@ -78,7 +38,9 @@ function FilmInfo() {
             <div className="sm:w-1/3 w-full flex justify-center items-start">
               <img
                 className="  w-[16rem]  h-[24rem] border-[#33394b] rounded-lg border-2  object-cover"
-                src={require(`../../images/${current.title}.jpg`)}
+                src={
+                  current.posterUrl ? current.posterUrl : "../images/heart.png"
+                }
               />
             </div>
             <div className="w-full sm:w-2/3  flex flex-col justify-start items-center ">
@@ -95,7 +57,7 @@ function FilmInfo() {
                   </p>
                 </div>
                 <p className="w-4/5  file: mt-6 text-lg text-[#8ba6a0]">
-                  {current.description}
+                  {current.plot}
                 </p>
               </div>
             </div>

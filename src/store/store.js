@@ -7,6 +7,8 @@ import moviesReducer from "./slices/movieSlice";
 import movieReducer from "./slices/singleMovieSlice";
 import listsReducer from "./slices/listSlice";
 import listReducer from "./slices/singleListSlice";
+import favoritesReducer from "./slices/favoritesSlice";
+import watchlistReducer from "./slices/watchlistSlice";
 
 export default configureStore({
   reducer: {
@@ -18,6 +20,8 @@ export default configureStore({
     lists: listsReducer,
     list: listReducer,
     movie: movieReducer,
+    favorites: favoritesReducer,
+    watchlist: watchlistReducer,
     // redux store kısmı
   },
 });
