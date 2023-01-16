@@ -5,8 +5,31 @@ const favorites = JSON.parse(favoritesFromLocalStorage)
   : [];
 
 const initialState = {
-  favoriteMovies: favorites.length > 0 ? favorites : [],
+  favoriteMovies: null,
 };
+
+export const fetchFavorites = createAsyncThunk(
+  "favorites/fetchFavorites",
+  async () => {
+    try {
+      const response = await UserAPI.userInfo();
+
+      let value = false;
+      if (!errors.isError(response)) {
+        value = response.data.data;
+        console.log("fetchUser", response.data);
+      }
+
+      return value;
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
+      }
+    }
+
+    return null;
+  }
+);
 
 export const favorite = createSlice({
   name: " favoriteMovies",

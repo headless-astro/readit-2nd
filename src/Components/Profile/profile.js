@@ -4,6 +4,7 @@ import { addFavoriteMovie } from "../../store/slices/favoriteMovieSlice";
 import { addWatchMovie } from "../../store/slices/forWatchList";
 import { deleteWatchMovie } from "../../store/slices/forWatchList";
 import { deleteFavoriteMovies } from "../../store/slices/favoriteMovieSlice";
+import favoritesAPI from "../../api/favoritesAPI";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
