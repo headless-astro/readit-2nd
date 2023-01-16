@@ -21,7 +21,7 @@ function Pages() {
         <Route path="/lists" element={<Lists />} />
         <Route path="/lists/:id" element={<ListInfo />} />
 
-        <Route path="/movie/:id" element={<FilmInfo />} />
+        <Route path="/movie/:title" element={<FilmInfo />} />
 
         {fetchUserValue && <Route path="/profile" element={<Profile />} />}
         {fetchUserValue && (

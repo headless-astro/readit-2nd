@@ -84,7 +84,7 @@ function ListInfo() {
                       >
                         <Link
                           className="absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem]  hover:text-[#613573]"
-                          to={"/"}
+                          to={`/movie/${movie}`}
                         >
                           <div className="">
                             <img

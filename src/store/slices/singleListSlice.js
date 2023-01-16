@@ -10,7 +10,6 @@ const initialState = {
 
 export const fetchList = createAsyncThunk("lists/fetchList", async (listid) => {
   try {
-    console.log("hey");
     const response = await ListAPI.currentList(listid);
 
     let value = false;

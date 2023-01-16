@@ -3,17 +3,17 @@ import MovieApi from "../../api/MovieAPI";
 import errors from "../../api/errors";
 
 const initialState = {
-  movie: false,
+  movies: false,
 };
 
-export const fetchMovies = createAsyncThunk("movie/fetchMovie", async () => {
+export const fetchMovies = createAsyncThunk("movie/fetchMovies", async () => {
   try {
-    const response = await MovieApi.getAllMovie();
+    const response = await MovieApi.getAllMovies();
     console.log(response);
     let value = false;
     if (!errors.isError(response)) {
       value = response.data.data;
-      console.log("Movie", response.data);
+      console.log("Movies", response.data);
     }
 
     return value;
@@ -26,16 +26,16 @@ export const fetchMovies = createAsyncThunk("movie/fetchMovie", async () => {
   return null;
 });
 
-export const movie = createSlice({
-  name: "movie",
+export const movies = createSlice({
+  name: "movies",
   initialState,
   reducers: {},
   extraReducers: {
     [fetchMovies.fulfilled]: (state, action) => {
-      state.user = action.payload;
-      console.log(state.user);
+      state.movies = action.payload;
+      console.log(state.movies);
     },
   },
 });
 
-export default movie.reducer;
+export default movies.reducer;

@@ -73,6 +73,12 @@ function Profile() {
             FAVORİLER
           </button>
         </Link>
+        <Link to="/lists">
+          <button className="font-bold  text-[#fffffe]  font-sans opacity-60 hover:text-[#613573] hover:opacity-100 ">
+            {" "}
+            LISTELER
+          </button>
+        </Link>
         <Link to="/watchlist">
           <button className="font-bold  text-[#fffffe]  font-sans opacity-60 hover:text-[#613573] hover:opacity-100 ">
             {" "}
@@ -83,50 +89,7 @@ function Profile() {
       <div className="flex flex-col w-4/5 text-[#63707d]  mt-11 border-b-2 hover:text-[#613573] hover:border-[#613573] border-[#445566]">
         <p>BU HAFTA BEĞENEBİLECEKLERİN</p>
       </div>
-      <div className="w-4/5 h-full mt-16  mb-16  grid grid-cols-2 sm:grid-cols-5 justify-center items-center ">
-        {data.slice(15, 20).map((element, key) => {
-          return (
-            <div
-              key={key}
-              className="h-[16rem] xl:h-[18rem]  rounded-3xl mx-7 my-2 flex  items-end justify-center group  "
-            >
-              <Link
-                className="absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem]"
-                to={`/movie/${element.Id}`}
-              >
-                <img
-                  className=" absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem] border-2 border-[#1b2228] hover:border-[#613573] rounded-3xl object-cover"
-                  src={require(`../../images/${element.img}`)}
-                />
-              </Link>
-              {fetchUserValue && (
-                <div className="w-3/5 h-10 mb-2 z-10 flex justify-center rounded-lg bg-black opacity-70  gap-4  sm:invisible  sm:group-hover:visible  ease-in-out duration-100 ">
-                  <button onClick={() => addToFavoriteMovies(element)}>
-                    <img
-                      className={` h-6 object-cover   rounded-2xl ${
-                        favorite && favorite.find((x) => x.Id === element.Id)
-                          ? "bg-[#B12403]"
-                          : "hover:bg-[#B12403]"
-                      }  `}
-                      src={require("../../images/popcorn.png")}
-                    />
-                  </button>
-                  <button onClick={() => addToForWatchMovies(element)}>
-                    <img
-                      className={` h-6 object-cover   rounded-2xl ${
-                        watch && watch.find((x) => x.Id === element.Id)
-                          ? "bg-[#00b020]"
-                          : "hover:bg-[#00b020]"
-                      }  `}
-                      src={require("../../images/eye.png")}
-                    />
-                  </button>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      <div className="w-4/5 h-full mt-16  mb-16  grid grid-cols-2 sm:grid-cols-5 justify-center items-center "></div>
     </div>
   );
 }
