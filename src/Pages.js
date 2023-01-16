@@ -8,7 +8,7 @@ import FavoriteMovies from "./Components/Profile/favoriteMovies";
 import FilmInfo from "./Components/FilmInfo/filmInfo";
 
 function Pages() {
-  const isLoginValue = useSelector((state) => state.user !== null);
+  const fetchUserValue = useSelector((state) => state.user.user);
   return (
     <div>
       <Routes>
@@ -18,11 +18,11 @@ function Pages() {
 
         <Route path="/movie/:id" element={<FilmInfo />} />
 
-        {isLoginValue && <Route path="/profile" element={<Profile />} />}
-        {isLoginValue && (
+        {fetchUserValue && <Route path="/profile" element={<Profile />} />}
+        {fetchUserValue && (
           <Route path="/favoritemovies" element={<FavoriteMovies />} />
         )}
-        {isLoginValue && <Route path="/watchlist" element={<WatchList />} />}
+        {fetchUserValue && <Route path="/watchlist" element={<WatchList />} />}
       </Routes>
     </div>
   );

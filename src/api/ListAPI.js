@@ -31,7 +31,7 @@ const deleteList = async (listname, profileid) => {
 
 const getAllLists = async (profileid) => {
   try {
-    const res = await api.get(`lists/all-lists`, { profileid });
+    const res = await api.post(`lists/all-lists`, { profileid });
     console.log(res.data);
 
     return res;
@@ -42,7 +42,7 @@ const getAllLists = async (profileid) => {
 
 const currentList = async (listname, profileid) => {
   try {
-    const res = await api.get("lists/list-current", { listname, profileid });
+    const res = await api.post("lists/list-current", { listname, profileid });
 
     return res;
   } catch (error) {
@@ -86,7 +86,3 @@ export default {
   addMovie,
   removeMovie,
 };
-
-//router.post("/create-list", authentication, listController.createList);
-
-//router.post("/delete-list", authentication, listController.deleteList);
