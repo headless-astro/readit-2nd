@@ -54,7 +54,7 @@ function Lists() {
         </div>
       </div>
       <div>
-        {Array.isArray(lists) && lists !== null ? (
+        {Array.isArray(lists) && lists.length !== 0 ? (
           <div className="w-4/5 h-full mt-16  mb-16  grid grid-cols-2 sm:grid-cols-5 justify-center items-center ">
             {lists.map((list) => (
               <div
@@ -62,15 +62,17 @@ function Lists() {
                 className="h-[16rem] xl:h-[18rem]  rounded-3xl mx-7 my-2 flex  flex-row justify-center group  "
               >
                 <Link
-                  className="absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem]"
-                  to={"/"}
+                  className="absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem]  hover:text-[#613573]"
+                  to={`/lists/${list.list_id}`}
                 >
-                  <img
-                    className=" absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem] border-2 border-[#1b2228] hover:border-[#613573] rounded-3xl object-cover"
-                    src={require(`../../images/${list.movies[0]}.jpg`)}
-                  />
+                  <div className="">
+                    <img
+                      className=" absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem] border-2 border-[#1b2228] hover:border-[#613573] rounded-3xl object-cover"
+                      src={require(`../../images/${list.movies[0]}.jpg`)}
+                    />
+                    <div>{list.list_name}</div>
+                  </div>
                 </Link>
-                {list.list_name}
               </div>
             ))}
           </div>

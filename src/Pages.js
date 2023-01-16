@@ -7,6 +7,7 @@ import WatchList from "./Components/Profile/watchList";
 import FavoriteMovies from "./Components/Profile/favoriteMovies";
 import FilmInfo from "./Components/FilmInfo/filmInfo";
 import Lists from "./Components/Lists/Lists";
+import ListInfo from "./Components/Lists/ListInfo";
 
 function Pages() {
   const fetchUserValue = useSelector((state) => state.user.user);
@@ -18,6 +19,7 @@ function Pages() {
         <Route path="/films" element={<FilmsMain />} />
 
         <Route path="/lists" element={<Lists />} />
+        <Route path="/lists/:id" element={<ListInfo />} />
 
         <Route path="/movie/:id" element={<FilmInfo />} />
 

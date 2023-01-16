@@ -41,9 +41,10 @@ const getAllLists = async (userid) => {
   }
 };
 
-const currentList = async (listname, userid) => {
+const currentList = async (id) => {
   try {
-    const res = await api.post("lists/list-current", { listname, userid });
+    const res = await api.post("lists/list-current", { id });
+    console.log(id);
 
     return res;
   } catch (error) {

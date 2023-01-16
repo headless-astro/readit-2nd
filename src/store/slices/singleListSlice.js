@@ -5,19 +5,18 @@ import { useSelector } from "react-redux";
 import UserAPI from "../../api/UserAPI";
 
 const initialState = {
-  lists: false,
+  list: false,
 };
 
-export const fetchLists = createAsyncThunk("lists/fetchLists", async () => {
+export const fetchList = createAsyncThunk("lists/fetchList", async (listid) => {
   try {
-    const userId = await UserAPI.userInfo();
-
-    const response = await ListAPI.getAllLists(userId.data.data.uid);
+    console.log(listid);
+    const response = await ListAPI.currentList(listid);
 
     let value = false;
     if (!errors.isError(response)) {
       value = response.data.data;
-      console.log("fetchLists", response.data);
+      console.log("fetchList", response.data);
     }
 
     return value;
@@ -30,16 +29,16 @@ export const fetchLists = createAsyncThunk("lists/fetchLists", async () => {
   return null;
 });
 
-export const lists = createSlice({
-  name: "lists",
+export const list = createSlice({
+  name: "list",
   initialState,
   reducers: {},
   extraReducers: {
-    [fetchLists.fulfilled]: (state, action) => {
-      state.lists = action.payload;
-      console.log(state.lists);
+    [fetchList.fulfilled]: (state, action) => {
+      state.list = action.payload;
+      console.log(state.list);
     },
   },
 });
 
-export default lists.reducer;
+export default list.reducer;
