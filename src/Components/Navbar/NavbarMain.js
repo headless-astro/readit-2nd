@@ -10,10 +10,6 @@ function NavnarMain() {
   const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
 
-  useEffect(() => {
-    console.log(fetchUserValue);
-  }, [fetchUserValue]);
-
   const isLoginFunction = () => {
     {
       if (fetchUserValue) {

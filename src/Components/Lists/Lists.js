@@ -1,27 +1,28 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import ListAPI from "../../api/ListAPI";
+import { fetchLists } from "../../store/slices/listSlice";
 
 function Lists() {
   const data = useSelector((state) => state.mert.data);
   const fetchUserValue = useSelector((state) => state.user.user);
   const favorite = useSelector((state) => state.favorite.favoriteMovies);
   const watch = useSelector((state) => state.forwatch.watchMovies);
+  const dispatch = useDispatch();
   const userid = useSelector((state) => state.user.user.uid);
-  const lists = [];
+  const lists = useSelector((state) => state.lists.lists);
   const listNames = [];
-  getAllLists();
 
-  async function getAllLists() {
-    const result = await ListAPI.getAllLists(userid);
+  useEffect(() => {
+    dispatch(fetchLists())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
 
-    for (var i = 0; i < result.data.data.length; i++) {
-      lists.push(result.data.data[i]);
-      listNames.push(result.data.data[i].list_name);
-    }
-  }
-
-  console.log(lists);
   // Some styling for the items
   const styles = {
     backgroundColor: "white",
@@ -31,7 +32,6 @@ function Lists() {
     color: "green",
     boxShadow: "rgb(0,0,0,0.44) 0px 5px 5px",
   };
-
   return (
     <div className="w-full h-full flex justify-center items-center flex-col bg-[#1f252c]  ">
       <div className=" w-full flex  h-[102px] sm:h-[92px] bg-[#14181c]"></div>
@@ -52,6 +52,31 @@ function Lists() {
             +
           </button>
         </div>
+      </div>
+      <div>
+        {Array.isArray(lists) && lists !== null ? (
+          <div className="w-4/5 h-full mt-16  mb-16  grid grid-cols-2 sm:grid-cols-5 justify-center items-center ">
+            {lists.map((list) => (
+              <div
+                key={list.list_id}
+                className="h-[16rem] xl:h-[18rem]  rounded-3xl mx-7 my-2 flex  flex-row justify-center group  "
+              >
+                <Link
+                  className="absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem]"
+                  to={"/"}
+                >
+                  <img
+                    className=" absolute w-[9rem] h-[13rem] sm:w-[11rem]  sm:h-[16rem] xl:w-[13rem] xl:h-[18rem] border-2 border-[#1b2228] hover:border-[#613573] rounded-3xl object-cover"
+                    src={require(`../../images/${list.movies[0]}.jpg`)}
+                  />
+                </Link>
+                {list.list_name}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div>No lists</div>
+        )}
       </div>
     </div>
   );
