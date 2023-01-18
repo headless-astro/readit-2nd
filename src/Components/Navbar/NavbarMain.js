@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import CreateModal from "../Modals/CreateModal";
+import RegisterModal from "../Modals/RegisterModal";
 import { fetchUser } from "../../store/slices/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import AuthAPI from "../../api/AuthAPI";
@@ -8,7 +9,8 @@ import AuthAPI from "../../api/AuthAPI";
 function NavnarMain() {
   const fetchUserValue = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-  const [modal, setModal] = useState(false);
+  const [loginModal, setLoginModal] = useState(false);
+  const [registerModal, setRegisterModal] = useState(false);
 
   const isLoginFunction = () => {
     {
@@ -17,8 +19,14 @@ function NavnarMain() {
         localStorage.removeItem("fetchUser");
         AuthAPI.logout();
       } else {
-        setModal(!modal);
+        setLoginModal(!loginModal);
       }
+    }
+  };
+
+  const isRegisterFunction = () => {
+    {
+      setRegisterModal(!registerModal);
     }
   };
 
@@ -54,7 +62,16 @@ function NavnarMain() {
         >
           {fetchUserValue ? "ÇIKIŞ YAP" : "GİRİŞ YAP"}
         </button>
-        {modal && <CreateModal modal={modal} />}
+        {loginModal && <CreateModal modal={loginModal} />}
+        {!fetchUserValue && (
+          <button
+            onClick={isRegisterFunction}
+            className="hover:text-[#fefefe]  sm:ml-6"
+          >
+            UYE OL
+          </button>
+        )}
+        {registerModal && <RegisterModal modal={registerModal} />}
       </div>
     </div>
   );

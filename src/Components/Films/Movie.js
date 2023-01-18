@@ -14,13 +14,14 @@ function Movie(props) {
   var watchlist = useSelector((state) => state.watchlist.watchlist);
   var favTitles = [];
   var watchTitles = [];
-  favorites.forEach((element) => {
-    favTitles.push(element.title);
-  });
-  watchlist.forEach((element) => {
-    watchTitles.push(element.title);
-  });
-
+  if (fetchUserValue) {
+    favorites.forEach((element) => {
+      favTitles.push(element.title);
+    });
+    watchlist.forEach((element) => {
+      watchTitles.push(element.title);
+    });
+  }
   const addToFavoriteMovies = (title) => {
     dispatch(fetchFavorites());
     if (favTitles && favTitles.includes(title)) {

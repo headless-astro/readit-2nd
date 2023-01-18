@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 function Watchlist() {
   const watchList = useSelector((state) => state.watchlist.watchlist);
+  const user = useSelector((state) => state.user.user);
   const [movies, setMovies] = useState(watchList);
   const dispatch = useDispatch();
 
@@ -51,21 +52,25 @@ function Watchlist() {
           IZLEME LISTESI{" "}
         </p>
       </div>
-      <div>
-        {Array.isArray(movies) && movies.length !== 0 ? (
-          <div className="w-4/5 h-full mt-16  mb-16  grid grid-cols-2 sm:grid-cols-5 justify-center items-center ">
-            <Pagination
-              data={movies}
-              RenderComponent={Movie}
-              title="Movies"
-              pageLimit={5}
-              dataLimit={20}
-            />
-          </div>
-        ) : (
-          <div>No movies</div>
-        )}
-      </div>
+      {user ? (
+        <div>
+          {Array.isArray(movies) && movies.length !== 0 ? (
+            <div className="w-4/5 h-full mt-16  mb-16  grid grid-cols-2 sm:grid-cols-5 justify-center items-center ">
+              <Pagination
+                data={movies}
+                RenderComponent={Movie}
+                title="Movies"
+                pageLimit={5}
+                dataLimit={20}
+              />
+            </div>
+          ) : (
+            <div>No movies</div>
+          )}
+        </div>
+      ) : (
+        <div>Listenizi gormek icin giris yapin</div>
+      )}
     </div>
   );
 }

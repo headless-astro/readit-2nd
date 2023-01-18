@@ -25,10 +25,9 @@ function Pages() {
         <Route path="/movie/:title" element={<FilmInfo />} />
 
         {fetchUserValue && <Route path="/profile" element={<Profile />} />}
-        {fetchUserValue && (
-          <Route path="/favoritemovies" element={<Favorites />} />
-        )}
-        {fetchUserValue && <Route path="/Watchlist" element={<Watchlist />} />}
+
+        <Route path="/favoritemovies" element={<Favorites />} />
+        <Route path="/Watchlist" element={<Watchlist />} />
       </Routes>
     </div>
   );

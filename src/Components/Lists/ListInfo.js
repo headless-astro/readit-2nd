@@ -6,7 +6,7 @@ import { fetchList } from "../../store/slices/singleListSlice";
 import favoritesAPI from "../../api/favoritesAPI";
 import { fetchFavorites } from "../../store/slices/favoritesSlice";
 import { fetchWatchlist } from "../../store/slices/watchlistSlice";
-import watchlistAPI from "../../api/watchlistAPI";
+import ListAPI from "../../api/ListAPI";
 import Movie from "../Films/Movie";
 import Pagination from "../Films/Pagination";
 
@@ -18,7 +18,7 @@ function ListInfo() {
   var favorites = useSelector((state) => state.favorites.favorites);
   var watchlist = useSelector((state) => state.watchlist.watchlist);
   const listid = id.toString();
-
+  console.log(current.listname);
   useEffect(() => {
     dispatch(fetchList(listid))
       .unwrap()
@@ -46,6 +46,18 @@ function ListInfo() {
       });
   }, []);
 
+  async function deleteList(listname) {
+    const res = await ListAPI.deleteList(listname, fetchUserValue.uid);
+
+    if (res.error) {
+      alert(`error: ${res.error}`);
+      return false;
+    }
+
+    window.location.href = "/lists";
+    return true;
+  }
+
   return (
     <div className="w-full h-full flex flex-col justify-center items-center text-center bg-[#1f252c]  ">
       <div className=" w-full h-[102px] sm:h-[92px] bg-[#14181c]"></div>
@@ -55,6 +67,12 @@ function ListInfo() {
             className=" w-4/5  py-12 h-full  flex  flex-col sm:flex-row
         "
           >
+            {fetchUserValue && (
+              <button onClick={() => deleteList(current.listname)}>
+                Listeyi Sil
+              </button>
+            )}
+
             <div className="sm:w-1/3 w-full flex justify-center items-start">
               <img
                 className="  w-[16rem]  h-[24rem] border-[#33394b] rounded-lg border-2  object-cover"

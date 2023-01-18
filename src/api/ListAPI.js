@@ -18,7 +18,7 @@ const createList = async (userid, listname) => {
 
 const deleteList = async (listname, userid) => {
   try {
-    const res = await api.post("lists/create-list", {
+    const res = await api.post("lists/delete-list", {
       listname,
       userid,
     });
