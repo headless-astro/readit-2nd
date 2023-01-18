@@ -1,18 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import ListAPI from "../../api/ListAPI";
 import { fetchLists } from "../../store/slices/listSlice";
 
 function Lists() {
-  const data = useSelector((state) => state.mert.data);
-  const fetchUserValue = useSelector((state) => state.user.user);
-  const favorite = useSelector((state) => state.favorite.favoriteMovies);
-  const watch = useSelector((state) => state.forwatch.watchMovies);
   const dispatch = useDispatch();
-  const userid = useSelector((state) => state.user.user.uid);
   const lists = useSelector((state) => state.lists.lists);
-  const listNames = [];
   console.log(lists);
 
   useEffect(() => {
@@ -33,7 +26,7 @@ function Lists() {
         </div>
         <div className="flex flex-col sm:ml-32 justify-center w-32 text-center  border-r-2  border-[#232d38]">
           <p className=" mb-4 pt-2  font-bold text-2xl text-[#fffffe]">
-            {favorite.length}
+            {lists.length}
           </p>
           <p className="  h-full font-bold  text-[#fffffe] text-s font-sans opacity-60 hover:text-[#613573] hover:opacity-80">
             LISTE

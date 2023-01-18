@@ -42,6 +42,12 @@ function NavnarMain() {
         <Link className="hover:text-[#fefefe] sm:ml-6" to="/lists">
           LİSTELER
         </Link>
+        <Link className="hover:text-[#fefefe] sm:ml-6" to="/favoritemovies">
+          FAVORILER
+        </Link>
+        <Link className="hover:text-[#fefefe] sm:ml-6" to="/Watchlist">
+          IZLEME LISTESI
+        </Link>
         <button
           onClick={isLoginFunction}
           className="hover:text-[#fefefe]  sm:ml-6"
