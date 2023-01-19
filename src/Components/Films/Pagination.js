@@ -1,9 +1,9 @@
 import { useState } from "react";
+import "../../css/pagination.css";
 
 function Pagination({ data, RenderComponent, title, pageLimit, dataLimit }) {
-  const [pages] = useState(Math.round(data.length / dataLimit));
+  const [pages] = useState(Math.ceil(data.length / dataLimit));
   const [currentPage, setCurrentPage] = useState(1);
-
   function goToNextPage() {
     setCurrentPage((page) => page + 1);
   }
@@ -20,16 +20,22 @@ function Pagination({ data, RenderComponent, title, pageLimit, dataLimit }) {
   const getPaginatedData = () => {
     const startIndex = currentPage * dataLimit - dataLimit;
     const endIndex = startIndex + dataLimit;
+
     return data.slice(startIndex, endIndex);
   };
 
   const getPaginationGroup = () => {
     let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
-    return new Array(pageLimit).fill().map((_, idx) => start + idx + 1);
+    var arr = new Array(pageLimit).fill().map((_, idx) => start + idx + 1);
+    if (arr.includes(pages)) {
+      arr = arr.filter((page) => page <= pages);
+    }
+
+    return arr;
   };
 
   return (
-    <div>
+    <div className="wrapper">
       {/* show the posts, 10 posts at a time */}
       <div className="dataContainer">
         {getPaginatedData().map((d, idx) => (
@@ -44,14 +50,13 @@ function Pagination({ data, RenderComponent, title, pageLimit, dataLimit }) {
         */}
       <div className="pagination">
         {/* previous button */}
-        {currentPage !== 1 && (
-          <button
-            onClick={goToPreviousPage}
-            className={`prev ${currentPage === 1 ? "disabled" : ""}`}
-          >
-            prev
-          </button>
-        )}
+
+        <button
+          onClick={goToPreviousPage}
+          className={`prev ${currentPage === 1 ? "disabled" : ""}`}
+        >
+          prev
+        </button>
 
         {/* show page numbers */}
         {getPaginationGroup().map((item, index) => (
@@ -67,14 +72,13 @@ function Pagination({ data, RenderComponent, title, pageLimit, dataLimit }) {
         ))}
 
         {/* next button */}
-        {currentPage !== 5 && (
-          <button
-            onClick={goToNextPage}
-            className={`next ${currentPage === pages ? "disabled" : ""}`}
-          >
-            next
-          </button>
-        )}
+
+        <button
+          onClick={goToNextPage}
+          className={`next ${currentPage === pages ? "disabled" : ""}`}
+        >
+          next
+        </button>
       </div>
     </div>
   );

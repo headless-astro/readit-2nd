@@ -1,23 +1,65 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { addFavoriteMovie } from "../../store/slices/favoriteMovieSlice";
-import { addWatchMovie } from "../../store/slices/forWatchList";
-import { deleteWatchMovie } from "../../store/slices/forWatchList";
-import { deleteFavoriteMovies } from "../../store/slices/favoriteMovieSlice";
 import { fetchMovie } from "../../store/slices/singleMovieSlice";
-import ListAPI from "../../api/ListAPI";
+import { useState } from "react";
+import favoritesAPI from "../../api/favoritesAPI";
+import watchlistAPI from "../../api/watchlistAPI";
+import AddToListModal from "../Modals/addToListModal";
+import { fetchFavorites } from "../../store/slices/favoritesSlice";
+import { fetchWatchlist } from "../../store/slices/watchlistSlice";
+import "../../css/moviePage.css";
 
 function FilmInfo() {
   const dispatch = useDispatch();
   const { title } = useParams();
-  const data = useSelector((state) => state.mert.data);
   const current = useSelector((state) => state.movie.movie);
   const fetchUserValue = useSelector((state) => state.user.user);
-  const favorite = useSelector((state) => state.favorite.favoriteMovies);
-  const watch = useSelector((state) => state.forwatch.watchMovies);
+  const [addMovieModal, setAddMovieModal] = useState(false);
   const movieTitle = title.toString();
-  console.log(movieTitle);
+  var favorites = useSelector((state) => state.favorites.favorites);
+  var watchlist = useSelector((state) => state.watchlist.watchlist);
+  var isFavorite = false;
+  var inWatchlist = false;
+  var favTitles = [];
+  var watchTitles = [];
+  //problem with buttons displaying wrong, work on it isfavorite/inwatchlist
+  if (fetchUserValue) {
+    favorites.forEach((element) => {
+      favTitles.push(element.title);
+    });
+    if (favTitles.includes(title)) {
+      isFavorite = true;
+    }
+    watchlist.forEach((element) => {
+      watchTitles.push(element.title);
+      if (title === element.title) {
+        inWatchlist = true;
+      }
+    });
+  }
+  const addToFavoriteMovies = () => {
+    if (favTitles && favTitles.includes(title)) {
+      favoritesAPI.deleteFavorite(title, fetchUserValue.uid);
+      favTitles = favTitles.filter((name) => name !== title);
+    } else {
+      favoritesAPI.addFavorite(title, fetchUserValue.uid);
+      favTitles = [...favTitles, title];
+    }
+    dispatch(fetchFavorites());
+  };
+
+  const addToWatchlist = () => {
+    if (watchTitles && watchTitles.includes(title)) {
+      watchlistAPI.deleteFromWatchlist(title, fetchUserValue.uid);
+      watchTitles = watchTitles.filter((name) => name !== title);
+    } else {
+      watchlistAPI.addToWatchlist(title, fetchUserValue.uid);
+      watchTitles = [...watchTitles, title];
+    }
+    dispatch(fetchWatchlist());
+  };
+
   useEffect(() => {
     dispatch(fetchMovie(movieTitle))
       .unwrap()
@@ -27,9 +69,29 @@ function FilmInfo() {
       });
   }, []);
 
+  useEffect(() => {
+    dispatch(fetchFavorites())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchWatchlist())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+
   //to test, fix to get listname, warn if its already in selected list
-  const addToList = (title) => {
-    ListAPI.addMovie("lastlist", fetchUserValue.uid, title);
+  const addToList = () => {
+    {
+      setAddMovieModal(!addMovieModal);
+    }
   };
 
   return (
@@ -38,19 +100,12 @@ function FilmInfo() {
       <div className=" flex w-4/5 items-center sm:items-center flex-col sm:flex-row   h-full">
         {current && (
           <div
-            className=" w-4/5  py-12 h-full  flex  flex-col sm:flex-row
+            className="cont
         "
           >
-            {fetchUserValue && (
-              <div>
-                <button onClick={() => addToList(current.title)}>
-                  Listeye ekle
-                </button>
-              </div>
-            )}
             <div className="sm:w-1/3 w-full flex justify-center items-start">
               <img
-                className="  w-[16rem]  h-[24rem] border-[#33394b] rounded-lg border-2  object-cover"
+                className="  w-[18rem]  h-[26rem] border-[#33394b] rounded-lg border-2  object-cover"
                 src={
                   current.posterUrl ? current.posterUrl : "../images/heart.png"
                 }
@@ -74,6 +129,29 @@ function FilmInfo() {
                 </p>
               </div>
             </div>
+            {fetchUserValue && (
+              <div className="bttn">
+                <div className="bttnUpper">
+                  <button className="btUpper" onClick={addToFavoriteMovies}>
+                    Favori
+                  </button>
+                  <button className="btUpper" onClick={addToWatchlist}>
+                    Izleme Listesi
+                  </button>
+                </div>
+                <div>
+                  <button className="btBottom" onClick={addToList}>
+                    Listeye ekle
+                  </button>
+                  <button className="btBottom">Filler</button>
+                  <button className="btBottom">Filler</button>
+                  <button className="btBottom">Filler</button>
+                </div>
+                {addMovieModal && (
+                  <AddToListModal modal={addMovieModal} title={current.title} />
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

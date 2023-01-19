@@ -6,7 +6,6 @@ import NavbarMain from "./Components/Navbar/NavbarMain";
 import Footer from "./Components/Footer/Footer";
 import CreateModal from "./Components/Modals/CreateModal";
 import { fetchUser } from "./store/slices/userSlice";
-import { addFavoriteMovie } from "./store/slices/favoriteMovieSlice";
 
 import Pages from "./Pages";
 import { fetchWatchlist } from "./store/slices/watchlistSlice";

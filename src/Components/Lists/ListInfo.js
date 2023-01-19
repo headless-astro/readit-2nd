@@ -101,7 +101,7 @@ function ListInfo() {
               <div>
                 {Array.isArray(current.movies) &&
                 current.movies.length !== 0 ? (
-                  <div className="w-4/5 h-full mt-16  mb-16  grid grid-cols-2 sm:grid-cols-5 justify-center items-center ">
+                  <div>
                     <Pagination
                       data={current.movies}
                       RenderComponent={Movie}
