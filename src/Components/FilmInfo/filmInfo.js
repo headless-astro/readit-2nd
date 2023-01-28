@@ -6,60 +6,21 @@ import { useState } from "react";
 import favoritesAPI from "../../api/favoritesAPI";
 import watchlistAPI from "../../api/watchlistAPI";
 import AddToListModal from "../Modals/addToListModal";
-import { fetchFavorites } from "../../store/slices/favoritesSlice";
-import { fetchWatchlist } from "../../store/slices/watchlistSlice";
 import "../../css/moviePage.css";
+import { fetchRating } from "../../store/slices/ratingsSlice";
+import StarRating from "./StarRating";
 
 function FilmInfo() {
   const dispatch = useDispatch();
   const { title } = useParams();
   const current = useSelector((state) => state.movie.movie);
   const fetchUserValue = useSelector((state) => state.user.user);
+  const rating = useSelector((state) => state.ratings.ratings);
   const [addMovieModal, setAddMovieModal] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [inWatchlist, setInWatchlist] = useState(false);
   const movieTitle = title.toString();
-  var favorites = useSelector((state) => state.favorites.favorites);
-  var watchlist = useSelector((state) => state.watchlist.watchlist);
-  var isFavorite = false;
-  var inWatchlist = false;
-  var favTitles = [];
-  var watchTitles = [];
-  //problem with buttons displaying wrong, work on it isfavorite/inwatchlist
-  if (fetchUserValue) {
-    favorites.forEach((element) => {
-      favTitles.push(element.title);
-    });
-    if (favTitles.includes(title)) {
-      isFavorite = true;
-    }
-    watchlist.forEach((element) => {
-      watchTitles.push(element.title);
-      if (title === element.title) {
-        inWatchlist = true;
-      }
-    });
-  }
-  const addToFavoriteMovies = () => {
-    if (favTitles && favTitles.includes(title)) {
-      favoritesAPI.deleteFavorite(title, fetchUserValue.uid);
-      favTitles = favTitles.filter((name) => name !== title);
-    } else {
-      favoritesAPI.addFavorite(title, fetchUserValue.uid);
-      favTitles = [...favTitles, title];
-    }
-    dispatch(fetchFavorites());
-  };
-
-  const addToWatchlist = () => {
-    if (watchTitles && watchTitles.includes(title)) {
-      watchlistAPI.deleteFromWatchlist(title, fetchUserValue.uid);
-      watchTitles = watchTitles.filter((name) => name !== title);
-    } else {
-      watchlistAPI.addToWatchlist(title, fetchUserValue.uid);
-      watchTitles = [...watchTitles, title];
-    }
-    dispatch(fetchWatchlist());
-  };
-
+  console.log(rating);
   useEffect(() => {
     dispatch(fetchMovie(movieTitle))
       .unwrap()
@@ -67,27 +28,57 @@ function FilmInfo() {
       .catch((e) => {
         console.log(e);
       });
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchFavorites())
+    dispatch(fetchRating(movieTitle))
       .unwrap()
       .then((result) => console.log("result: ", result))
       .catch((e) => {
         console.log(e);
       });
+    async function checkFavorite() {
+      const favResult = await favoritesAPI.isFavorite(
+        title,
+        fetchUserValue.uid
+      );
+      setIsFavorite(favResult);
+    }
+    async function checkWatchlist() {
+      const watchResult = await watchlistAPI.inWatchlist(
+        title,
+        fetchUserValue.uid
+      );
+      setInWatchlist(watchResult);
+    }
+    checkWatchlist();
+    checkFavorite();
   }, []);
 
   useEffect(() => {
-    dispatch(fetchWatchlist())
+    dispatch(fetchRating(movieTitle))
       .unwrap()
       .then((result) => console.log("result: ", result))
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [rating]);
 
-  //to test, fix to get listname, warn if its already in selected list
+  const addToFavoriteMovies = (title) => {
+    if (isFavorite) {
+      favoritesAPI.deleteFavorite(title, fetchUserValue.uid);
+    } else {
+      favoritesAPI.addFavorite(title, fetchUserValue.uid);
+    }
+    setIsFavorite(!isFavorite);
+  };
+
+  const addToWatchlist = (title) => {
+    if (inWatchlist) {
+      watchlistAPI.deleteFromWatchlist(title, fetchUserValue.uid);
+    } else {
+      watchlistAPI.addToWatchlist(title, fetchUserValue.uid);
+    }
+    setInWatchlist(!inWatchlist);
+  };
+
   const addToList = () => {
     {
       setAddMovieModal(!addMovieModal);
@@ -130,26 +121,56 @@ function FilmInfo() {
               </div>
             </div>
             {fetchUserValue && (
-              <div className="bttn">
-                <div className="bttnUpper">
-                  <button className="btUpper" onClick={addToFavoriteMovies}>
-                    Favori
-                  </button>
-                  <button className="btUpper" onClick={addToWatchlist}>
-                    Izleme Listesi
-                  </button>
-                </div>
-                <div>
-                  <button className="btBottom" onClick={addToList}>
-                    Listeye ekle
-                  </button>
-                  <button className="btBottom">Filler</button>
-                  <button className="btBottom">Filler</button>
-                  <button className="btBottom">Filler</button>
-                </div>
-                {addMovieModal && (
-                  <AddToListModal modal={addMovieModal} title={current.title} />
+              <div>
+                {rating !== "" ? (
+                  <div className="">
+                    <div className="rating">{rating} &#9733;</div>
+                  </div>
+                ) : (
+                  <div className="">
+                    <div className="btUpper">No ratings</div>
+                  </div>
                 )}
+                <div className="bttn">
+                  <div className="star">
+                    <StarRating title={current.title} />
+                  </div>
+                  <div className="bttnUpper">
+                    <button
+                      className="btUpper"
+                      onClick={() => addToFavoriteMovies(title)}
+                    >
+                      <img
+                        className={`h-10 object-cover rounded-2xl ml-10 mr-5 ${
+                          isFavorite ? "bg-[#B12403]" : ""
+                        }  hover:bg-[#B12403]}`}
+                        src={require("../../images/popcorn.png")}
+                      />
+                    </button>
+                    <button
+                      className="btUpper"
+                      onClick={() => addToWatchlist(title)}
+                    >
+                      <img
+                        className={`h-10 object-cover rounded-2xl ml-10 mr-5 ${
+                          inWatchlist ? "bg-[#B12403]" : ""
+                        }  hover:bg-[#B12403]}`}
+                        src={require("../../images/eye.png")}
+                      />
+                    </button>
+                  </div>
+                  <div>
+                    <button className="btBottom" onClick={addToList}>
+                      LİSTEYE EKLE
+                    </button>
+                  </div>
+                  {addMovieModal && (
+                    <AddToListModal
+                      modal={addMovieModal}
+                      title={current.title}
+                    />
+                  )}
+                </div>
               </div>
             )}
           </div>

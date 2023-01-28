@@ -22,18 +22,12 @@ function FilmsMain() {
       .catch((e) => {
         console.log(e);
       });
-  }, []);
-
-  useEffect(() => {
     dispatch(fetchFavorites())
       .unwrap()
       .then((result) => console.log("result: ", result))
       .catch((e) => {
         console.log(e);
       });
-  }, []);
-
-  useEffect(() => {
     dispatch(fetchWatchlist())
       .unwrap()
       .then((result) => console.log("result: ", result))
@@ -42,18 +36,11 @@ function FilmsMain() {
       });
   }, []);
 
-  useEffect(() => {
-    setMovies(movies);
-  }, [favorites]);
-
-  useEffect(() => {
-    setMovies(movies);
-  }, [watchlist]);
-
   //works individually
   const ChangeGenre = (event) => {
     var genre = event;
     if (event === "Tür") {
+      setMovies(allMovies);
     } else {
       setMovies(allMovies.filter((item) => item.genres.includes(genre)));
     }

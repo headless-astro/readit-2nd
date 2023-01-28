@@ -3,55 +3,52 @@ import { Link } from "react-router-dom";
 import favoritesAPI from "../../api/favoritesAPI";
 import watchlistAPI from "../../api/watchlistAPI";
 import "../../css/movieItem.css";
+import { useEffect, useState } from "react";
 import { fetchWatchlist } from "../../store/slices/watchlistSlice";
 import { fetchFavorites } from "../../store/slices/favoritesSlice";
-import { useState } from "react";
 
 function Movie(props) {
   const { id, title, posterUrl } = props.data;
   const fetchUserValue = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-  var favorites = useSelector((state) => state.favorites.favorites);
-  var watchlist = useSelector((state) => state.watchlist.watchlist);
-  var isFavorite = false;
-  var inWatchlist = false;
-  var favTitles = [];
-  var watchTitles = [];
-  //problem with buttons displaying wrong, work on it isfavorite/inwatchlist
-  if (fetchUserValue) {
-    favorites.forEach((element) => {
-      favTitles.push(element.title);
-    });
-    if (favTitles.includes(title)) {
-      isFavorite = true;
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [inWatchlist, setInWatchlist] = useState(false);
+
+  useEffect(() => {
+    async function checkFavorite() {
+      const favResult = await favoritesAPI.isFavorite(
+        title,
+        fetchUserValue.uid
+      );
+      setIsFavorite(favResult);
     }
-    watchlist.forEach((element) => {
-      watchTitles.push(element.title);
-      if (title === element.title) {
-        inWatchlist = true;
-      }
-    });
-  }
+    async function checkWatchlist() {
+      const watchResult = await watchlistAPI.inWatchlist(
+        title,
+        fetchUserValue.uid
+      );
+      setInWatchlist(watchResult);
+    }
+    checkWatchlist();
+    checkFavorite();
+  }, []);
+
   const addToFavoriteMovies = (title) => {
-    if (favTitles && favTitles.includes(title)) {
+    if (isFavorite) {
       favoritesAPI.deleteFavorite(title, fetchUserValue.uid);
-      favTitles = favTitles.filter((name) => name !== title);
     } else {
       favoritesAPI.addFavorite(title, fetchUserValue.uid);
-      favTitles = [...favTitles, title];
     }
-    dispatch(fetchFavorites());
+    setIsFavorite(!isFavorite);
   };
 
   const addToWatchlist = (title) => {
-    if (watchTitles && watchTitles.includes(title)) {
+    if (inWatchlist) {
       watchlistAPI.deleteFromWatchlist(title, fetchUserValue.uid);
-      watchTitles = watchTitles.filter((name) => name !== title);
     } else {
       watchlistAPI.addToWatchlist(title, fetchUserValue.uid);
-      watchTitles = [...watchTitles, title];
     }
-    dispatch(fetchWatchlist());
+    setInWatchlist(!inWatchlist);
   };
 
   return (

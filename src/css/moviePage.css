@@ -5,7 +5,7 @@
     flex-direction: column;
     width: 18rem;
     height: 20rem;
-    margin-top: 3.5rem;
+    margin-top: 1rem;
 }
 
 .cont {
@@ -31,10 +31,20 @@
     margin-bottom: 1rem;
 }
 
+.rating {
+    color: #cfe6ff;
+    font-size: 3rem;
+}
+
 .btBottom {
     width: 100%;
     border-top: #cfe6ff solid 0.1rem;
-    padding-top: 1rem;
+    padding-top: 2rem;
     margin-top: 1rem;
     color: #cfe6ff;
+    font-size: 1.5rem;
+}
+
+.star {
+    padding-top: 2rem;
 }
