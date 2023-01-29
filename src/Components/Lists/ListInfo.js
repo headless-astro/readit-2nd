@@ -1,17 +1,19 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchList } from "../../store/slices/singleListSlice";
 import ListAPI from "../../api/ListAPI";
 import Movie from "../Films/Movie";
 import Pagination from "../Films/Pagination";
+import AddMovieToListModal from "../Modals/addMovietoListModal";
 
 function ListInfo() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const current = useSelector((state) => state.list.list);
   const fetchUserValue = useSelector((state) => state.user.user);
+  const [modal, setModal] = useState(false);
   const listid = id.toString();
   console.log(current.listname);
   useEffect(() => {
@@ -35,6 +37,10 @@ function ListInfo() {
     return true;
   }
 
+  const addMovietoList = () => {
+    setModal(!modal);
+  };
+
   return (
     <div className="w-full h-full flex justify-center items-center flex-col bg-[#1f252c]  ">
       <div className=" w-full flex  h-[102px] sm:h-[92px] bg-[#14181c]"></div>
@@ -48,12 +54,26 @@ function ListInfo() {
 
               <div className=" flex  items-center sm:mt-0 mt-4 ">
                 {fetchUserValue && (
-                  <button
-                    className=" p-2 bg-[#77818f] rounded-2xl text-xl"
-                    onClick={() => deleteList(current.listname)}
-                  >
-                    Listeyi Sil
-                  </button>
+                  <div>
+                    <button
+                      className=" p-2 bg-[#77818f] rounded-2xl text-xl"
+                      onClick={() => deleteList(current.listname)}
+                    >
+                      Listeyi Sil
+                    </button>
+                    <button
+                      className=" p-2 bg-[#77818f] rounded-2xl text-xl"
+                      onClick={addMovietoList}
+                    >
+                      Film Ekle
+                    </button>
+                    {modal && (
+                      <AddMovieToListModal
+                        modal={modal}
+                        listname={current.listname}
+                      />
+                    )}
+                  </div>
                 )}
               </div>
             </div>

@@ -90,89 +90,123 @@ function FilmInfo() {
       <div className=" w-full h-[102px] sm:h-[92px] bg-[#14181c]"></div>
       <div className=" flex w-4/5 items-center sm:items-center flex-col sm:flex-row   h-full">
         {current && (
-          <div
-            className="cont
-        "
-          >
-            <div className="sm:w-1/3 w-full flex justify-center items-start">
+          <div className="cont">
+            <div className="sm:w-1/3 w-full flex flex-col justify-center text-center items-start">
               <img
                 className="  w-[18rem]  h-[26rem] border-[#33394b] rounded-lg border-2  object-cover"
                 src={
                   current.posterUrl ? current.posterUrl : "../images/heart.png"
                 }
               />
+              {rating !== "" ? (
+                <div className="w-[8rem] flex flex-row ml-24">
+                  <div className="rating">{rating} &#9733;</div>
+                </div>
+              ) : (
+                <div className="w-[8rem] flex flex-row ml-24">
+                  <div className="btUpper">No ratings</div>
+                </div>
+              )}
             </div>
             <div className="w-full sm:w-2/3  flex flex-col justify-start items-center ">
-              <div className="flex flex-col justify-center text-center items-center  w-full  mt-6 sm:ml-6 ">
-                <p className="text-white w-6/7 font-bold text-2xl font-serif">
-                  {current.title.toUpperCase()}
-                </p>
-                <div className="flex w-full gap-2 justify-center text-center items-center">
-                  <p className="  pt-2 sm:text-xl text-[#77818f]   font-normal">
+              <div className="flex flex-col justify-center text-center items-center  w-full  mt-6  ">
+                <div className="flex flex-row justify-center  items-center text-center  ">
+                  <p className="text-white w-6/7 font-bold text-2xl font-serif pr-2">
+                    {current.title.toUpperCase()}
+                  </p>
+                  <p className=" sm:text-xl text-[#77818f]   font-normal">
                     {current.year}
                   </p>
+                </div>
+                <div className="flex w-full gap-2 justify-center text-center items-center">
                   <p className="  pt-2 sm:text-xl text-[#77818f] font-normal">
                     Directed by {current.director}
                   </p>
                 </div>
-                <p className="w-4/5  file: mt-6 text-lg text-[#8ba6a0]">
+                <p className="w-4/5  file: mt-6 text-xl text-[#8ba6a0]">
                   {current.plot}
                 </p>
-              </div>
-            </div>
-            {fetchUserValue && (
-              <div>
-                {rating !== "" ? (
-                  <div className="">
-                    <div className="rating">{rating} &#9733;</div>
+                <div className="mt-20 flex flex-col">
+                  <div className="flex flex-row">
+                    <p className="pt-2 sm:text-xl text-[#77818f] font-normal mr-3">
+                      Aktörler
+                    </p>
+                    <p className="pt-2 sm:text-xl text-[#8ba6a0] font-normal">
+                      {current.actors}
+                    </p>
                   </div>
-                ) : (
-                  <div className="">
-                    <div className="btUpper">No ratings</div>
+                  <div className="flex flex-row">
+                    <p className="pt-2 sm:text-xl text-[#77818f] font-normal mr-3">
+                      Türler
+                    </p>
+
+                    {current.genres.map((genre) => (
+                      <p
+                        key={genre}
+                        className="pt-2 sm:text-xl text-[#8ba6a0] font-normal"
+                      >
+                        &nbsp;{genre}&nbsp;
+                      </p>
+                    ))}
                   </div>
-                )}
-                <div className="bttn">
-                  <div className="star">
-                    <StarRating title={current.title} />
+                  <div className="flex flex-row">
+                    <p className="pt-2 sm:text-xl text-[#77818f] font-normal mr-3">
+                      Süre
+                    </p>
+
+                    <p className="pt-2 sm:text-xl text-[#8ba6a0] font-normal">
+                      {current.runtime} dakika
+                    </p>
                   </div>
-                  <div className="bttnUpper">
-                    <button
-                      className="btUpper"
-                      onClick={() => addToFavoriteMovies(title)}
-                    >
-                      <img
-                        className={`h-10 object-cover rounded-2xl ml-10 mr-5 ${
-                          isFavorite ? "bg-[#B12403]" : ""
-                        }  hover:bg-[#B12403]}`}
-                        src={require("../../images/popcorn.png")}
-                      />
-                    </button>
-                    <button
-                      className="btUpper"
-                      onClick={() => addToWatchlist(title)}
-                    >
-                      <img
-                        className={`h-10 object-cover rounded-2xl ml-10 mr-5 ${
-                          inWatchlist ? "bg-[#B12403]" : ""
-                        }  hover:bg-[#B12403]}`}
-                        src={require("../../images/eye.png")}
-                      />
-                    </button>
-                  </div>
-                  <div>
-                    <button className="btBottom" onClick={addToList}>
-                      LİSTEYE EKLE
-                    </button>
-                  </div>
-                  {addMovieModal && (
-                    <AddToListModal
-                      modal={addMovieModal}
-                      title={current.title}
-                    />
-                  )}
                 </div>
               </div>
-            )}
+            </div>
+            <div>
+              {fetchUserValue && (
+                <div>
+                  <div className="bttn">
+                    <div className="star">
+                      <StarRating title={current.title} />
+                    </div>
+                    <div className="bttnUpper">
+                      <button
+                        className="btUpper"
+                        onClick={() => addToFavoriteMovies(title)}
+                      >
+                        <img
+                          className={`h-10 object-cover rounded-2xl ml-10 mr-5 ${
+                            isFavorite ? "bg-[#B12403]" : ""
+                          }  hover:bg-[#B12403]}`}
+                          src={require("../../images/popcorn.png")}
+                        />
+                      </button>
+                      <button
+                        className="btUpper"
+                        onClick={() => addToWatchlist(title)}
+                      >
+                        <img
+                          className={`h-10 object-cover rounded-2xl ml-10 mr-5 ${
+                            inWatchlist ? "bg-[#B12403]" : ""
+                          }  hover:bg-[#B12403]}`}
+                          src={require("../../images/eye.png")}
+                        />
+                      </button>
+                    </div>
+                    <div>
+                      <button className="btBottom" onClick={addToList}>
+                        LİSTEYE EKLE
+                      </button>
+                    </div>
+                    {addMovieModal && (
+                      <AddToListModal
+                        modal={addMovieModal}
+                        title={current.title}
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
