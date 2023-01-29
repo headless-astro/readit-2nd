@@ -7,15 +7,22 @@ import ListAPI from "../../api/ListAPI";
 import Movie from "../Films/Movie";
 import Pagination from "../Films/Pagination";
 import AddMovieToListModal from "../Modals/addMovietoListModal";
+import { fetchFavorites } from "../../store/slices/favoritesSlice";
+import { fetchWatchlist } from "../../store/slices/watchlistSlice";
 
 function ListInfo() {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const current = useSelector((state) => state.list.list);
+  const fetchedList = useSelector((state) => state.list.list);
   const fetchUserValue = useSelector((state) => state.user.user);
+  const fetchedFavorites = useSelector((state) => state.favorites.favorites);
+  const fetchedWatchlist = useSelector((state) => state.watchlist.watchlist);
+  const [personalizedMovies, setPersonalizeMovies] = useState(null);
+  const [current, setCurrent] = useState(null);
+  const [movies, setMovies] = useState(null);
   const [modal, setModal] = useState(false);
   const listid = id.toString();
-  console.log(current.listname);
+
   useEffect(() => {
     dispatch(fetchList(listid))
       .unwrap()
@@ -23,7 +30,68 @@ function ListInfo() {
       .catch((e) => {
         console.log(e);
       });
+    dispatch(fetchFavorites())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
+    dispatch(fetchWatchlist())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
   }, []);
+
+  useEffect(() => {
+    setPersonalizeMovies(
+      PersonalizeMovies(movies, fetchedFavorites, fetchedWatchlist)
+    );
+  }, [movies, fetchedFavorites, fetchedWatchlist]);
+
+  useEffect(() => {
+    setCurrent(fetchedList);
+    setMovies(fetchedList.movies);
+  }, [fetchedList]);
+
+  const PersonalizeMovies = (movies, favs, watchlist) => {
+    if (movies == null || !Array.isArray(movies)) return null;
+    if (favs == null || !Array.isArray(favs)) return null;
+    if (watchlist == null || !Array.isArray(watchlist)) return null;
+
+    let personalizedMovies = movies.slice();
+
+    for (var i = 0; i < movies.length; i++) {
+      var mov = movies[i];
+
+      // check fav
+      for (var y = 0; y < favs.length; y++) {
+        var item = favs[y];
+
+        if (mov.title === item.title) {
+          personalizedMovies[i] = {
+            ...personalizedMovies[i],
+            isFavorite: true,
+          };
+        }
+      }
+
+      // check watchlist
+      for (var y = 0; y < watchlist.length; y++) {
+        var item = watchlist[y];
+
+        if (mov.title === item.title) {
+          personalizedMovies[i] = {
+            ...personalizedMovies[i],
+            inWatchlist: true,
+          };
+        }
+      }
+    }
+
+    return personalizedMovies;
+  };
 
   async function deleteList(listname) {
     const res = await ListAPI.deleteList(listname, fetchUserValue.uid);
@@ -56,13 +124,13 @@ function ListInfo() {
                 {fetchUserValue && (
                   <div>
                     <button
-                      className=" p-2 bg-[#77818f] rounded-2xl text-xl"
+                      className="m-1 p-2 bg-[#77818f] rounded-[0.3rem] text-xl"
                       onClick={() => deleteList(current.listname)}
                     >
                       Listeyi Sil
                     </button>
                     <button
-                      className=" p-2 bg-[#77818f] rounded-2xl text-xl"
+                      className=" m-1 p-2 bg-[#77818f] rounded-[0.3rem] text-xl"
                       onClick={addMovietoList}
                     >
                       Film Ekle
@@ -71,6 +139,7 @@ function ListInfo() {
                       <AddMovieToListModal
                         modal={modal}
                         listname={current.listname}
+                        listid={current.uid}
                       />
                     )}
                   </div>
@@ -81,15 +150,16 @@ function ListInfo() {
               {current.listname.toUpperCase()}
             </p>
             <p className="  pl-16 sm:text-xl text-[#77818f] font-normal">
-              Created by {fetchUserValue.username}
+              {fetchUserValue.username} tarafından yaratıldı
             </p>
           </div>
 
           <div>
-            {Array.isArray(current.movies) && current.movies.length !== 0 ? (
+            {Array.isArray(personalizedMovies) &&
+            personalizedMovies.length !== 0 ? (
               <div>
                 <Pagination
-                  data={current.movies}
+                  data={personalizedMovies}
                   RenderComponent={Movie}
                   title="Movies"
                   pageLimit={5}
@@ -97,7 +167,9 @@ function ListInfo() {
                 />
               </div>
             ) : (
-              <div>No movies</div>
+              <div className="pl-[50rem] pt-[10rem] sm:text-xl min-h-[30rem] text-[#77818f]">
+                Film yok
+              </div>
             )}
           </div>
         </div>

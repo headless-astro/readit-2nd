@@ -9,18 +9,23 @@ import AddToListModal from "../Modals/addToListModal";
 import "../../css/moviePage.css";
 import { fetchRating } from "../../store/slices/ratingsSlice";
 import StarRating from "./StarRating";
+import { fetchFavorites } from "../../store/slices/favoritesSlice";
+import { fetchWatchlist } from "../../store/slices/watchlistSlice";
 
 function FilmInfo() {
   const dispatch = useDispatch();
   const { title } = useParams();
   const current = useSelector((state) => state.movie.movie);
   const fetchUserValue = useSelector((state) => state.user.user);
-  const rating = useSelector((state) => state.ratings.ratings);
+  const fetchedRating = useSelector((state) => state.ratings.ratings);
+  const fetchedFavorites = useSelector((state) => state.favorites.favorites);
+  const fetchedWatchlist = useSelector((state) => state.watchlist.watchlist);
   const [addMovieModal, setAddMovieModal] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [inWatchlist, setInWatchlist] = useState(false);
+  const [rating, setRating] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(null);
+  const [inWatchlist, setInWatchlist] = useState(null);
   const movieTitle = title.toString();
-  console.log(rating);
+
   useEffect(() => {
     dispatch(fetchMovie(movieTitle))
       .unwrap()
@@ -34,32 +39,59 @@ function FilmInfo() {
       .catch((e) => {
         console.log(e);
       });
-    async function checkFavorite() {
-      const favResult = await favoritesAPI.isFavorite(
-        title,
-        fetchUserValue.uid
-      );
-      setIsFavorite(favResult);
-    }
-    async function checkWatchlist() {
-      const watchResult = await watchlistAPI.inWatchlist(
-        title,
-        fetchUserValue.uid
-      );
-      setInWatchlist(watchResult);
-    }
-    checkWatchlist();
-    checkFavorite();
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchRating(movieTitle))
+    dispatch(fetchFavorites())
       .unwrap()
       .then((result) => console.log("result: ", result))
       .catch((e) => {
         console.log(e);
       });
-  }, [rating]);
+    dispatch(fetchWatchlist())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+
+  useEffect(() => {
+    setIsFavorite(CheckFavorite(movieTitle, fetchedFavorites));
+  }, [fetchedFavorites]);
+
+  useEffect(() => {
+    setInWatchlist(CheckWatchlist(movieTitle, fetchedWatchlist));
+  }, [fetchedWatchlist]);
+
+  useEffect(() => {
+    setRating(fetchedRating);
+  }, [fetchedRating]);
+
+  const CheckFavorite = (title, favs) => {
+    if (favs == null || !Array.isArray(favs)) return null;
+
+    let isFav = false;
+
+    favs.forEach((element) => {
+      if (element.title === title) {
+        isFav = true;
+      }
+    });
+
+    return isFav;
+  };
+
+  const CheckWatchlist = (title, watchlist) => {
+    if (watchlist == null || !Array.isArray(watchlist)) return null;
+
+    let inWatch = false;
+
+    watchlist.forEach((element) => {
+      if (element.title === title) {
+        inWatch = true;
+      }
+    });
+
+    return inWatch;
+  };
 
   const addToFavoriteMovies = (title) => {
     if (isFavorite) {
@@ -179,6 +211,7 @@ function FilmInfo() {
                           }  hover:bg-[#B12403]}`}
                           src={require("../../images/popcorn.png")}
                         />
+                        <p className="ml-6 mt-1">Favoriler</p>
                       </button>
                       <button
                         className="btUpper"
@@ -189,7 +222,8 @@ function FilmInfo() {
                             inWatchlist ? "bg-[#B12403]" : ""
                           }  hover:bg-[#B12403]}`}
                           src={require("../../images/eye.png")}
-                        />
+                        />{" "}
+                        <p className="ml-3 mt-1">Izleme Listesi</p>
                       </button>
                     </div>
                     <div>

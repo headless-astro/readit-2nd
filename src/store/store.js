@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import dataReducer from "./slices/dataSlice";
 import userReducer from "./slices/userSlice";
 
 import moviesReducer from "./slices/movieSlice";
@@ -13,7 +12,6 @@ import userRatingReducer from "./slices/userRatingSlice";
 
 export default configureStore({
   reducer: {
-    mert: dataReducer,
     movies: moviesReducer,
     user: userReducer,
     lists: listsReducer,

@@ -51,10 +51,10 @@ function NavnarMain() {
           LİSTELER
         </Link>
         <Link className="hover:text-[#fefefe] sm:ml-6" to="/favoritemovies">
-          FAVORILER
+          FAVORİLER
         </Link>
         <Link className="hover:text-[#fefefe] sm:ml-6" to="/Watchlist">
-          IZLEME LISTESI
+          İZLEME LİSTESİ
         </Link>
         <button
           onClick={isLoginFunction}
@@ -68,7 +68,7 @@ function NavnarMain() {
             onClick={isRegisterFunction}
             className="hover:text-[#fefefe]  sm:ml-6"
           >
-            UYE OL
+            ÜYE OL
           </button>
         )}
         {registerModal && <RegisterModal modal={registerModal} />}

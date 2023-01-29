@@ -40,7 +40,7 @@ function Lists() {
                     {lists.length}
                   </p>
                   <p className="  h-full font-bold  text-[#fffffe] text-s font-sans opacity-60 hover:text-[#613573] hover:opacity-80">
-                    LISTE
+                    LİSTE
                   </p>
                 </div>
                 <div className="flex flex-col  justify-center w-[5rem] text-center ">
@@ -51,7 +51,7 @@ function Lists() {
                     +
                   </button>
                   <p className="  h-full font-bold  text-[#fffffe] text-s font-sans opacity-60 hover:text-[#613573] hover:opacity-80">
-                    LISTE EKLE
+                    LİSTE EKLE
                   </p>
                   {modal && <ListModal modal={modal} />}
                 </div>
@@ -60,10 +60,10 @@ function Lists() {
           </div>
         </div>
         <p className=" bg-[#1b2228] pl-16 text-xl text-[#63707d] hover:text-[#613573] w-full border-b-2 border-[#445566] hover:border-[#613573]">
-          LISTELER
+          LİSTELER
         </p>
       </div>
-      <div className="w-full">
+      <div className="w-full ">
         {user ? (
           <div>
             <div>
@@ -78,12 +78,14 @@ function Lists() {
                   />
                 </div>
               ) : (
-                <div>No lists</div>
+                <div className="min-h-[50rem]">No lists</div>
               )}
             </div>
           </div>
         ) : (
-          <div>Listerinizi gormek icin giris yapin</div>
+          <div className="pl-[48rem] pt-[10rem] min-h-[30rem] text-[#63707d] text-[1.5rem]">
+            Listerinizi görmek için giriş yapın
+          </div>
         )}
       </div>
     </div>

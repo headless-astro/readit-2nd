@@ -4,18 +4,16 @@ import ListAPI from "../../api/ListAPI";
 import "../../css/movietolistmodal.css";
 
 import { fetchMovies } from "../../store/slices/movieSlice";
+import { fetchList } from "../../store/slices/singleListSlice";
 import Movie from "../Films/Movie";
 function AddMovieToListModal(props) {
   const allMovies = useSelector((state) => state.movies.movies);
   const [movies, setMovies] = useState(allMovies);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-  // usestate kısmı
   const [showModal, setShowModal] = useState(props.modal);
-  const [title, setTitle] = useState("");
   const [listName, setListName] = useState(props.listname);
-  const [alert, setalert] = useState("invisible");
-  const lists = useSelector((state) => state.lists.lists);
+  const [listid, setListId] = useState(props.listid);
 
   useEffect(() => {
     dispatch(fetchMovies())
@@ -26,8 +24,11 @@ function AddMovieToListModal(props) {
       });
   }, []);
 
+  useEffect(() => {
+    setMovies(allMovies);
+  }, [allMovies]);
+
   function addToList(title) {
-    console.log(title);
     ListAPI.addMovie(listName, user.uid, title);
     setShowModal(false);
   }
@@ -59,7 +60,7 @@ function AddMovieToListModal(props) {
                     ></input>
                   </div>
                   {/*body*/}
-                  <div className="min-w-[32rem]  min-h-[36rem] max-h-[36rem] relative p-6 flex flex-col items-center justify-center ">
+                  <div className="min-w-[32rem] max-h-[36rem] relative p-6 flex flex-col items-center justify-center ">
                     <div className="flex flex-col w-[28rem] h-[36rem]mx-6 mb-4 overflow-y-auto">
                       <div>
                         <div className="mbCont ">

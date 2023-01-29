@@ -7,11 +7,11 @@ import { fetchFavorites } from "../../store/slices/favoritesSlice";
 import { fetchMovies } from "../../store/slices/movieSlice";
 
 function FilmsMain() {
-  const allMovies = useSelector((state) => state.movies.movies);
-  const [movies, setMovies] = useState(allMovies);
-  const favorites = useSelector((state) => state.favorites.favorites);
-  const watchlist = useSelector((state) => state.watchlist.watchlist);
-  const [filterData, setFilterData] = useState(allMovies);
+  const fetchedMovies = useSelector((state) => state.movies.movies);
+  const fetchedFavorites = useSelector((state) => state.favorites.favorites);
+  const fetchedWatchlist = useSelector((state) => state.watchlist.watchlist);
+  const [filterData, setFilterData] = useState(null);
+  const [personalizedMovies, setPersonalizeMovies] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -36,19 +36,74 @@ function FilmsMain() {
       });
   }, []);
 
+  useEffect(() => {
+    setPersonalizeMovies(
+      PersonalizeMovies(fetchedMovies, fetchedFavorites, fetchedWatchlist)
+    );
+  }, [fetchedMovies, fetchedFavorites, fetchedWatchlist]);
+
+  useEffect(() => {
+    setFilterData(personalizedMovies);
+  }, [personalizedMovies]);
+
+  const PersonalizeMovies = (movies, favs, watchlist) => {
+    if (movies == null || !Array.isArray(movies)) return null;
+
+    let personalizedMovies = movies.slice();
+
+    for (var i = 0; i < movies.length; i++) {
+      var mov = movies[i];
+
+      // check fav
+      if (Array.isArray(favs)) {
+        for (var y = 0; y < favs.length; y++) {
+          var item = favs[y];
+
+          if (mov.title === item.title) {
+            personalizedMovies[i] = {
+              ...personalizedMovies[i],
+              isFavorite: true,
+            };
+          }
+        }
+      }
+
+      // check watchlist
+      if (Array.isArray(watchlist)) {
+        for (var y = 0; y < watchlist.length; y++) {
+          var item = watchlist[y];
+
+          if (mov.title === item.title) {
+            personalizedMovies[i] = {
+              ...personalizedMovies[i],
+              inWatchlist: true,
+            };
+          }
+        }
+      }
+    }
+
+    return personalizedMovies;
+  };
+
   //works individually
   const ChangeGenre = (event) => {
     var genre = event;
     if (event === "Tür") {
-      setMovies(allMovies);
+      setFilterData(personalizedMovies);
     } else {
-      setMovies(allMovies.filter((item) => item.genres.includes(genre)));
+      setFilterData(
+        personalizedMovies.filter((movie) => movie.genres.includes(genre))
+      );
     }
   };
+
   const FilmName = (event) => {
     const title = event.toLowerCase();
-    setMovies(
-      allMovies.filter((item) => item.title.toLowerCase().includes(title))
+    setFilterData(
+      personalizedMovies.filter((movie) =>
+        movie.title.toLowerCase().includes(title)
+      )
     );
   };
 
@@ -103,10 +158,10 @@ function FilmsMain() {
         </p>
       </div>
       <div>
-        {Array.isArray(movies) && movies.length !== null ? (
+        {Array.isArray(filterData) && filterData.length !== null ? (
           <div>
             <Pagination
-              data={movies}
+              data={filterData}
               RenderComponent={Movie}
               title="Movies"
               pageLimit={5}
@@ -114,7 +169,7 @@ function FilmsMain() {
             />
           </div>
         ) : (
-          <div>No movies</div>
+          <div className="min-h-[50rem]">Loading...</div>
         )}
       </div>
     </div>

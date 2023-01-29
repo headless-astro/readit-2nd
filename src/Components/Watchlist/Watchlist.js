@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Movie from "../Films/Movie";
 import Pagination from "../Films/Pagination";
-import { fetchWatchlist, watchlist } from "../../store/slices/watchlistSlice";
+import { fetchWatchlist } from "../../store/slices/watchlistSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchFavorites } from "../../store/slices/favoritesSlice";
 
 function Watchlist() {
-  const watchList = useSelector((state) => state.watchlist.watchlist);
+  const fetchedFavorites = useSelector((state) => state.favorites.favorites);
+  const fetchedWatchlist = useSelector((state) => state.watchlist.watchlist);
   const user = useSelector((state) => state.user.user);
-  const [movies, setMovies] = useState(watchList);
+  const [personalizedMovies, setPersonalizeMovies] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,17 +19,55 @@ function Watchlist() {
       .catch((e) => {
         console.log(e);
       });
+    dispatch(fetchFavorites())
+      .unwrap()
+      .then((result) => console.log("result: ", result))
+      .catch((e) => {
+        console.log(e);
+      });
   }, []);
 
   useEffect(() => {
-    setMovies(watchList);
-  }, [watchList]);
+    setPersonalizeMovies(PersonalizeMovies(fetchedFavorites, fetchedWatchlist));
+  }, [fetchedFavorites, fetchedWatchlist]);
 
   const FilmName = (event) => {
     const title = event.toLowerCase();
-    setMovies(
-      watchList.filter((item) => item.title.toLowerCase().includes(title))
+    setPersonalizeMovies(
+      fetchedWatchlist.filter((item) =>
+        item.title.toLowerCase().includes(title)
+      )
     );
+  };
+
+  const PersonalizeMovies = (favs, watchlist) => {
+    if (favs == null || !Array.isArray(favs)) return null;
+    if (watchlist == null || !Array.isArray(watchlist)) return null;
+
+    let personalizedMovies = watchlist.slice();
+
+    for (var i = 0; i < watchlist.length; i++) {
+      var mov = watchlist[i];
+
+      personalizedMovies[i] = {
+        ...personalizedMovies[i],
+        inWatchlist: true,
+      };
+
+      // check watchlist
+      for (var y = 0; y < favs.length; y++) {
+        var item = favs[y];
+
+        if (mov.title === item.title) {
+          personalizedMovies[i] = {
+            ...personalizedMovies[i],
+            isFavorite: true,
+          };
+        }
+      }
+    }
+
+    return personalizedMovies;
   };
 
   return (
@@ -49,15 +89,16 @@ function Watchlist() {
           </div>
         </div>
         <p className=" bg-[#1b2228] pl-16 text-xl text-[#63707d] hover:text-[#613573] w-full border-b-2 border-[#445566] hover:border-[#613573]">
-          IZLEME LISTESI{" "}
+          İZLEME LİSTESİ{" "}
         </p>
       </div>
       {user ? (
         <div>
-          {Array.isArray(movies) && movies.length !== 0 ? (
+          {Array.isArray(personalizedMovies) &&
+          personalizedMovies.length !== 0 ? (
             <div>
               <Pagination
-                data={movies}
+                data={personalizedMovies}
                 RenderComponent={Movie}
                 title="Movies"
                 pageLimit={5}
@@ -65,11 +106,13 @@ function Watchlist() {
               />
             </div>
           ) : (
-            <div>No movies</div>
+            <div className="min-h-[50rem]">No movies</div>
           )}
         </div>
       ) : (
-        <div>Listenizi gormek icin giris yapin</div>
+        <div className=" pt-[10rem] min-h-[30rem] text-[#63707d] text-[1.5rem]">
+          Listenizi görmek için giriş yapın
+        </div>
       )}
     </div>
   );

@@ -102,7 +102,7 @@ function RegisterModal(props) {
                       type="button"
                       onClick={isRegisterFunction}
                     >
-                      GİRİŞ YAP
+                      ÜYE OL
                     </button>
                   </div>
                 </div>
